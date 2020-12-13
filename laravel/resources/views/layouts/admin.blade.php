@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="{{ URL::to('css/styles.css') }}">
     <!-- Using a facade above to pull in the CSS from its spot no matter how that path changes -->
 
-    <title>Laravel</title>
+    <title>That are Laravel Views with Laravel Blade</title>
 
 
 </head>
 
 <body>
-    @include('partials.header')
+    @include('partials.admin-header')
     <!-- this adds the header, a 'partial' we created, to our master layout -->
     <div class="container">
         @yield('content')
