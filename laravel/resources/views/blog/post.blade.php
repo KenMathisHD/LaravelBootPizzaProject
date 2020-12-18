@@ -3,12 +3,14 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <p class="quote">Learning Laravel</p>
+        <p class="quote">{{ $post['title'] }}</p>
+        <!-- because we passed the post variable to our view (blog.post, that's for this file), we can plug it in here using double curly braces, and giving it the array spot/location/area/block/thing we defined in our routes file -->
+        <!-- the variable has to be called dollar sign post because that's how we assigned it in our routes file -->
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+        <p>{{ $post['content'] }}</p>
     </div>
 </div>
 @endsection

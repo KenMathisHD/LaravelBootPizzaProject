@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 
 @section('content')
+
+@include('partials.errors')
 <div class="row">
     <div class="col-md-12">
         <!-- hooking up post route in the action part of form below, uses double curly braces -->
@@ -13,6 +15,7 @@
                 <label for="content">Content</label>
                 <input type="text" class="form-control" id="content" name="content">
             </div>
+            {{ csrf_field() }}
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
