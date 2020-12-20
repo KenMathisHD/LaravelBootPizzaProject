@@ -13,9 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('blog.index');
-})->name('blog-index');
+// Route::get('/', function () {
+//     return view('blog.index');
+// })->name('blog-index');
+// Route::get('/', 'PostController@getIndex')->name('blog-index'); - this used to be the way in laravel 7, but is not how you do it in Laravel 8+
+Route::get('/', 'PostController@getIndex')->name('blog-index');
+// Here, we're plugging in the post controlelr we just made to populate the blog.index page with post data and show said data
+// There's two ways to hook this up - we can pass a string as the second argument telling what controller and action we want to use - which is what we did here
+// The way we did it here is we tell it what controller we want to use - postcontroller - and then use the @ sign and give it the name of the action (method) we want to use - getIndex
+
+
+// Route::get('/', [PostController::class, 'getIndex'])->name('blog-index');
+Route::get('/', 'App\Http\Controllers\PostController@getIndex')->name('blog-index');
+// This is how you do it in Laravel 8+ - link below for other solutions for the same problem
+// https://medium.com/@litvinjuan/how-to-fix-target-class-does-not-exist-in-laravel-8-f9e28b79f8b4
+
+
 //assigning names to our routes so that, if the route path changes, we don't need to update this on each page
 
 // use get to load a single page - to get a resource
