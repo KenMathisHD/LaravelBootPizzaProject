@@ -16,6 +16,7 @@
                 <input type="text" class="form-control" id="content" name="content" value="{{ $post['content'] }}">
             </div>
             {{ csrf_field() }}
+            <input type="hidden" name="id" value="{{ $postId }}">
             <!-- this shorthand uses a helper function offered by Laravel that includes the hidden input field for the csrf token that should be included in the post forms we submit -->
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
