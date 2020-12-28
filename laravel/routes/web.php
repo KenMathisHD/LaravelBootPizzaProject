@@ -64,6 +64,12 @@ Route::get(
     ->name('blog.post');
 // Here, since we're no longer using the old dummy data we were using earlier, and since we have our controller set up, we're using the new way of routing to our page with our data already populated there (or somethingg like that)
 
+Route::get(
+    'post/{id}/like',
+    'App\Http\Controllers\PostController@getLikePost'
+)
+    ->name('blog.post.like');
+
 
 Route::get('about', function () {
     return view('other.about');
@@ -187,3 +193,9 @@ Route::group(['prefix' => 'admin'], function () {
     )
         ->name('admin.editP');
 });
+
+Route::get(
+    'delete/{id}',
+    'App\Http\Controllers\PostController@getAdminDelete'
+)
+    ->name('admin.delete');

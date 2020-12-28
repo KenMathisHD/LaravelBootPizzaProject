@@ -2,27 +2,53 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\Like;
+use App\Models\Tag;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use Illuminate\Session\Store;
+// use App\Http\Requests;
+// use Illuminate\Session\Store;
+// use Symfony\Component\Console\Input\Input;
+// We are no longer using the session to store data, but I'm keeping these here to show how you would 'activate' the session for use
+
+// When you have an application working off a database, you'll typically want to seed data into it. You can actually use the laravel seeder for this
+// The command to make a seeder is php artisan make:seed and then the name for your seeder
+// Go to database/seeders to see the seeders we're using
+
+
 
 class PostController extends Controller
 {
-    public function getIndex(Store $session)
+    public function getIndex()
     {
+        // Used to contain Store $session when working using data from and storing data in session
+
+
+
         // Thankfully, emmet abbreviation makes entering the direct injection for this pretty easy. Just type in Store, and select the illuminate session thing, and it autofills the class
         // And then we just pass the dollar sign session variable right after it
 
         // This action should give us an index of all posts
         // In this method (action), we want to use our posts model. To use it, we need to instantiate (?) it
-        $post = new Post();
+        // $post = new Post();
         // here, we create our new variable called post, and we make it a new post object
         // The post object here refers to our post model, which is why we have to add the use App Post namespace import at the top
-        $posts = $post->getPosts($session);
+        // $posts = $post->getPosts($session);
         // We have to pass the session here, so we'll use dependency injection to do so at the setupo of our function. 
         // We can use dependency injection here in the controller, because Laravel loads the controller in a way where it has access tyo 
+        // Old solution that relies on session data - new solution below that uses database data
+
+        // $posts = Post::all();
+        // here, we're accessing the post model (not creating a new one) and using the all method
+        // this then stores all our posts (i.e. all the information in our posts database) and stores it in our $posts variable
+
+        $posts = Post::orderBy('created_at', 'desc')->get();
+        // here is a way to order our posts using some methods from the Laravel Query Builder
+        // right now, we're ordering our posts by created at time, and going in a descending order (desc)
+        // When we order like this, we need to make sure we chain the get at the end - otherwise, it wont actually get any posts
+
         return view('blog.index', ['posts' => $posts]);
         // With this post model, we can return a view. The view we want to return is our blog.index view
         // We're going to pass some data as well, which is our posts variable, which we assign to dollar sign post
@@ -32,17 +58,29 @@ class PostController extends Controller
 
 
 
-    public function getAdminIndex(Store $session) {
-        $post = new Post();
-        $posts = $post->getPosts($session);
+    public function getAdminIndex() {
+        // $posts = Post::all();
+
+        $posts = Post::orderBy('title', 'asc')->get();
         return view('admin.index', ['posts' => $posts]);
 
         // This function does the same as getIndex - it loads all posts to present them, but does it on the admin index view
     }
 
-    public function getPost(Store $session, $id) {
-        $post = new Post();
-        $post = $post->getPost($session, $id);
+    public function getPost($id) {
+        // Used to contain Store $session when working using data from and storing data in session
+        
+        
+        
+        // $post = new Post();
+        // $post = $post->getPost($session, $id);
+        // old solution from when using session storage - new solution using database is below
+
+        $post = Post::find($id);
+        // this is lazy loading - it only loads data if the data is needed. We can use eager loading in the code below by using the with method
+        // $post = Post::find($id)-with('likes');
+
+        // We're already passing id into this getPost method, so we're just using that variable and passing it into the find method that is already part of the Laravel Eloquent thingy
         return view('blog.post', ['post' => $post]);
 
         // This function is used for whenever we try to access a sinle post
@@ -50,22 +88,56 @@ class PostController extends Controller
         // It fetches this post from the post model and displays it on the blog post view
     }
 
+    public function getLikePost($id) {
+        $post = Post::find($id);
+        $like = new Like();
+        // here we're creating a new like after getting the post by the passed id
+        // we've passed in the like model at the top of the controller so we can use the like model and it's methods
+        $post->likes()->save($like);
+        // now, we're saving the like that was created
+        // we do that by accessing the relation with post->likes, and then we just use the save method on that relation, and pass the like we want to save
+        return redirect()->back();
+
+
+        // this is our new method that allows us to add a like to a post
+    }
+
     public function getAdminCreate() {
-        return view('admin.create');
+        // this used the tag model, which we loaded at the top of the controller
+        
+        $tags = Tag::all();
+        // this fetches all the tags
+        return view('admin.create', ['tags' => $tags]);
+        // and because fetching is now not enough, we're passing the tags here too
 
         // All this function does is return the view where the admin creates a new post
     }
 
-    public function getAdminEdit(Store $session, $id) {
-        $post = new Post();
-        $post = $post->getPost($session, $id);
-        return view('admin.edit', ['post' => $post, 'postId' => $id]);
+    public function getAdminEdit($id) {
+        // Used to contain Store $session when working using data from and storing data in session
+        
+        
+        
+        
+        $post = Post::find($id);
+        // We can actually use something different here - apparently find is a convenience method (?)
+        // $post = Post::where('id', '=', $id)->first();
+        // the above is an alternative to find - it's pretty much what happens behind the scenes
+        // instead, we really will just use find because it's shorter
+
+        $tags = Tag::all();
+
+
+        return view('admin.edit', ['post' => $post, 'postId' => $id], ['tags' => $tags]);
 
         // Here, we fetch a single post, and then load the admin edit view, and send the post data to that view where it is displayed
     }
 
-    public function postAdminCreate(Store $session, Request $request) {
+    public function postAdminCreate(Request $request) {
+        // Used to contain Store $session when working using data from and storing data in session
         
+
+
         $this->validate($request, [
             'title' => 'required|min:5',
             'content' => 'required|min:10'
@@ -91,6 +163,13 @@ class PostController extends Controller
         $post->save();
         // this stores the data somehow - I think it's a method that's part of laravel
         
+        $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
+        // we're storing the associated tags by accessing the tags relation (method - tags())in our post model and using the attach method
+        // in our attach method, we're passing an array of tags by accessing our tags input - the array of checkbox values on our view
+        // our tags array could be null, so we have to check if it's null by submitting an empty array. 
+        // If the empty array is not null, then we will use the actual array passed
+        // by some form of black magic which isn't really explained, this only attaches whatever tags have been checked - so, yea
+
         return redirect()->route('admin.index')->with('info', 'Post created, Title is: ' . $request->input('title'));
     
         // This is the action used whenever the administrator submits the create post form - the same form that gets loaded in the getAdminCreate route
@@ -100,8 +179,11 @@ class PostController extends Controller
 
     }
 
-    public function postAdminUpdate(Store $session, Request $request) {
+    public function postAdminUpdate(Request $request) {
+        // Used to contain Store $session when working using data from and storing data in session
         
+
+
         $this->validate($request, [
             'title' => 'required|min:5',
             'content' => 'required|min:10'
@@ -109,13 +191,51 @@ class PostController extends Controller
         
         
         
-        $post = new Post();
-        $post->editPost($session, $request->input('id'), $request->input('title'), $request->input('content'));
+        // $post = new Post();
+        // $post->editPost($session, $request->input('id'), $request->input('title'), $request->input('content'));
+        // Old solution from when we used session storage/data - new solution using database below
+
+
+        $post = Post::find($request->input('id'));
+        // Here, we're grabbing the specific post we updated in our edit view
+        // Because we passed the id already in our update method, we can just access it from the id on the page by using the input method
+
+        $post->title = $request->input('title');
+        $post->content = $request->input('content');
+        $post->save();
+        // here' I think because we're feeding it the same ID, laravel takes care of updating that database entry instead of just saving it as a new entry
+
+        // $post->tags()->detach();
+        // this, as it sits, removes all the existing tags 
+        // $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
+        // the tags thing that's gonna fail
+        // Apparently we don't need to use either of these things, because we can just use the just mentioned laravel sync method below
+
+        $post->tags()->sync($request->input('tags') === null ? [] : $request->input('tags'));
+        // this somehow figures out which tags changed, and will only detach the ones that are no longer selected
+
+
         return redirect()->route('admin.index')->with('info', 'Post edited, Title is: ' . $request->input('title'));
     
         // postAdminUpdate is pretty much the same as postAdminCreate, except this is for editing the post
         // Here, we're calling the editPost method on our Post model, passing the post ID as well as the new content, and then redirecting the user to the index page where that post edited message is displayed
 
+    }
+
+    public function getAdminDelete($id) {
+        $post = Post::find($id);
+
+        // when we delete a post, we also need to delete the connection to the like
+        $post->likes()->delete();
+        // so, what we'll do is grab the post, access all the likes for it, and delete those likes 
+
+        // We also need to delete the tags associated with the post from the post when the post is deleted
+        $post->tags()->detach();
+        // this just detachs all tags
+
+        $post->delete();
+        // this is a hard delete, meaning the data is deleted forever without a trace - you don't always want to do this
+        return redirect()->route('admin.index')->with('info', 'Post Deleted!');
     }
 
 

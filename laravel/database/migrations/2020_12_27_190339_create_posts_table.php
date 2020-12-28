@@ -19,6 +19,18 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->text('content');
             
+
+
+
+
+            // Once we've finished all our migrations, we need to run them with the following command
+            // php artisan migrate
+
+            // To refresh our migrations once we've made changes to them, we need to run the following command
+            // php artisan migrate:refresh
+
+            // You can refresh your migrations and re-seed your database by running the following command
+            // php artisan migrate:refresh --seed
         });
     }
 

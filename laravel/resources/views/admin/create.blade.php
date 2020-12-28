@@ -15,6 +15,15 @@
                 <label for="content">Content</label>
                 <input type="text" class="form-control" id="content" name="content">
             </div>
+            @foreach($tags as $tag)
+            <div class="checkbox">
+                <label for="">
+                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}">
+                    {{ $tag->name }}
+                </label>
+            </div>
+            @endforeach
+            <!-- this foreach loops through all our tags and creates checkboxes for each of them  -->
             {{ csrf_field() }}
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
