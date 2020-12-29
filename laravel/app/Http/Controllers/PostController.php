@@ -44,7 +44,21 @@ class PostController extends Controller
         // here, we're accessing the post model (not creating a new one) and using the all method
         // this then stores all our posts (i.e. all the information in our posts database) and stores it in our $posts variable
 
-        $posts = Post::orderBy('created_at', 'desc')->get();
+
+        $posts = Post::orderBy('created_at', 'desc')->paginate(2);
+        // paginate works just like get, except you can pass it how many posts you want to display on the page - either by hard coding it, or by passing a variable with a dynamic value
+
+        // to load in some laravel files for changing the styling, run the below code in the command line for the project
+        // php artisan vendor:publish --tag=laravel-pagination
+
+
+        // the default paginate method uses the following parameters/arguments
+        // public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null);
+
+
+
+        // below is how you would grab the data using get. A new version using paginate (3 posts per page type thing) is shown above
+        // $posts = Post::orderBy('created_at', 'desc')->get();
         // here is a way to order our posts using some methods from the Laravel Query Builder
         // right now, we're ordering our posts by created at time, and going in a descending order (desc)
         // When we order like this, we need to make sure we chain the get at the end - otherwise, it wont actually get any posts
@@ -164,11 +178,14 @@ class PostController extends Controller
         // this stores the data somehow - I think it's a method that's part of laravel
         
         $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
-        // we're storing the associated tags by accessing the tags relation (method - tags())in our post model and using the attach method
-        // in our attach method, we're passing an array of tags by accessing our tags input - the array of checkbox values on our view
-        // our tags array could be null, so we have to check if it's null by submitting an empty array. 
-        // If the empty array is not null, then we will use the actual array passed
-        // by some form of black magic which isn't really explained, this only attaches whatever tags have been checked - so, yea
+        // So - the skinny on this - we're inserting data by executing $post->tags(), and using the attach method to actually insert the data
+        // The attach method can take a single value (1 tag id) or an array of values (an array of tag ids)
+        // The reason passing the $request->input('tags') gives us an array of only checked tags is because we're passing an array in the name of each tag
+        // Somehow, when we pass 'tags[]' as the name for our checkbox input, whenever a checkbox is checked, the tag name or id or whatever gets stored in that 'tags[]' array - I don't understand how as this isn't explained
+        // So, when we bring in that array here, we're bringing in an array that contains the checked tags
+        // We have to be sure the array we're bringing in actually contains something and isn't just empty, so we check to see if it's equal to null (i.e. if there's nothing in the array)
+        // If it's equal to null, then we use a blank or empty array - if it's not, then we continue to use the array of tags we were just passing
+
 
         return redirect()->route('admin.index')->with('info', 'Post created, Title is: ' . $request->input('title'));
     
@@ -208,7 +225,6 @@ class PostController extends Controller
         // $post->tags()->detach();
         // this, as it sits, removes all the existing tags 
         // $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
-        // the tags thing that's gonna fail
         // Apparently we don't need to use either of these things, because we can just use the just mentioned laravel sync method below
 
         $post->tags()->sync($request->input('tags') === null ? [] : $request->input('tags'));

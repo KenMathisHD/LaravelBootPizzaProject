@@ -27,8 +27,42 @@ class Post extends Model
         return $this->belongsToMany('\App\Models\Tag', 'post_tag', 'post_id', 'tag_id')->withTimestamps();
         // this is for a many to many relationship - 1 post can have many tags, and 1 tag can go to many posts
         // We need to make sure to chain withTimestamps if we want to make sure that the timestamps in our pivot table also get filled out when a new relationship entry is created
+    
+        // this here - this always gives us back a laravel collection - i.e. a collection of tags
+
+
+
+        // to break this down a bit easier, belongsToMany works like this:
+        //      -The first (or only) thing you pass is the name of the related model class
+        //          In our case, our related model class is Tag, so we pass it that (or rather, the location)
+        //      -The second argument you pass, if any, will be the name of the intermediate table
+        //          The intermediate table is the table that keeps track of what belongs to who - i.e. user_id 123 has role_id 431 and user_id 124 has role_id 431 and whatnot
+        //      -The third argument you pass will be the name of the key that you're using for the model class where you're defining the relationship
+        //          So if you're defining the relationship on the user model class, and you're keeping track with the user_id, that would be user_id
+        //      -The fourth argument you pass will be the name of the key that you're using for the model class you're joining to
+        //          So if you're relationship is defined on the user model class, and you're joining to the roles model class, and you're keeping track with the role_id, then you would pass role_id
+
     }
 
+    public function setTitleAttribute($value) {
+        // a mutator function/method name will always start with set and will always end with Attribute
+        // the thing between set and attribute is the name of the field we want to change - it will always be uppercase for the first letter
+        // because we set it up this way, this method will automatically always be called whenever we set the title property
+        // another cool thing, Laravel, while making sure this runs automatically, also automatically saves the value to the database after running this mutator method
+        $this->attributes['title'] = strtolower($value);
+        // all this mutator does is convert the title to all lowercase letters
+    }
+    // this is a mutator function - mutators are always only set up in the model they're used for
+
+
+    public function getTitleAttribute($value) {
+        // an accessor function/method name will always start with get and will always end with Attribute
+        // the thing between get and attribute is the name of the field we want to get - it will always be uppercase for the first letter
+        // because we set it up this way, this method will automatically always be called whenever we get/access/fetch the title property from the database
+        // for an accessor, we have to return something instead of grab and save something
+        return strtoupper($value);
+    }
+    // this is an accessor method/function
 
 
 

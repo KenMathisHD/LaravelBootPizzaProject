@@ -21,7 +21,7 @@
         <!-- <h1 class="post-title">{{ $post['title'] }}</h1> -->
         <p style="font-weight: bold;">
             @foreach($post->tags as $tag)
-            -{{ $tag->name }}
+            -{{ $tag->name }}-
             @endforeach
             <!-- this loops through and displays/outputs all the tags from this post -->
         </p>
@@ -37,6 +37,14 @@
 </div>
 @endforeach
 
+
+<!-- this is where we're putting our page back and page forward buttons -->
+<div class="row">
+    <div class="col-md-12 text-center">
+        {{ $posts->links('vendor.pagination.default') }}
+        <!-- this built in links method takes care of creating our page forward and page back buttons for us -->
+    </div>
+</div>
 
 @endsection
 <!-- You have to end the section when you are done with it -->
