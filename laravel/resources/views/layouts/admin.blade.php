@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    @include('partials.admin-header')
+    @include('partials.header')
     <!-- this adds the header, a 'partial' we created, to our master layout -->
     <div class="container">
         @yield('content')

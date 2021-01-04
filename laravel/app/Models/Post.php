@@ -60,7 +60,7 @@ class Post extends Model
         // the thing between get and attribute is the name of the field we want to get - it will always be uppercase for the first letter
         // because we set it up this way, this method will automatically always be called whenever we get/access/fetch the title property from the database
         // for an accessor, we have to return something instead of grab and save something
-        return strtoupper($value);
+        return ucwords($value);
     }
     // this is an accessor method/function
 
