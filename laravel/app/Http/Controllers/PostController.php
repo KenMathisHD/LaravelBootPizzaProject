@@ -135,6 +135,7 @@ class PostController extends Controller
         
         $post = Post::find($id);
         // We can actually use something different here - apparently find is a convenience method (?)
+        
         // $post = Post::where('id', '=', $id)->first();
         // the above is an alternative to find - it's pretty much what happens behind the scenes
         // instead, we really will just use find because it's shorter

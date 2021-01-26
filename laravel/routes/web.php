@@ -96,11 +96,11 @@ Route::group(['prefix' => 'admin'], function () {
 
     // creating a post route below
     // Route::post('create', function (\Illuminate\Http\Request $request, \Illuminate\Validation\Factory $validator) {
-    //     // (above) we're using direct injection instead of using the request facade because it's apparently better to use direct injection instead of facades when you can
+    //     // (above) we're using direct injection instead of using the request facade because it's better to use direct injection instead of facades when you can
     //     // What we're doing here is getting access to the request object, and assigning it to the variable dollar sign request
 
     //     // We're also validating our data using that direct injection class after the dollar sign request variable, adn assigning it the variable of dollar sign validator
-    //     // This somehow allows us to create our own validation rules using Laravel's built in validator factory unit
+    //     // This allows us to create our own validation rules using Laravel's built in validator factory unit
 
     //     // Below we're creating our own validation rules using the validator factory
     //     $validation = $validator->make($request->all(), [
@@ -109,7 +109,7 @@ Route::group(['prefix' => 'admin'], function () {
     //     ]);
     //     // We're calling the make method to create a new validator, and it takes two arguments
     //     // The first argument is the data we want to validate. Here' we're using the data passed by the user. 
-    //     // We don't want to pass the whole request - we just want to pass the data attached to this request, and we'll do so by using the all method. This is a built in method we can use on this built in (?) object, which gives us all the data sent with the request
+    //     // We don't want to pass the whole request - we just want to pass the data attached to this request, and we'll do so by using the all method. This is a built in method we can use on this built in object, which gives us all the data sent with the request
     //     // The second argument is an associative array where we specify the rules we want to use. 
     //     // The structure is as follows
     //     // The name of the input field we want to validate - in this case title. The names we use for this are the names we assigned to our input fields in our views
@@ -121,7 +121,7 @@ Route::group(['prefix' => 'admin'], function () {
     //     if ($validation->fails()) {
     //         return redirect()->back()->withErrors($validation);
     //         // if validation fails, we're returning the user to the prior page by using redirect with the back method
-    //         // we're also chaining this with the withErrors method, which tells Laravel to flash some data to the session, but here it will use an error bag(?) that Laravel ships with. We'll pass it our dollar sign validation variable so it sends whatever errors it picks up
+    //         // we're also chaining this with the withErrors method, which tells Laravel to flash some data to the session, but here it will use an error bag that Laravel ships with. We'll pass it our dollar sign validation variable so it sends whatever errors it picks up
     //     }
     //     // Then, we'll check to see if validation fails by using an if block and the fails method
 

@@ -13,7 +13,7 @@ class Post extends Model
     protected $fillable = ['title', 'content'];
     // this is a protected porperty named $fillable
     // this is a protected name laravel will recognize, and it is an array 
-    // We're specifying a couple of string in this array, where each string refers to a database field we want to make mass assignable - i.e. assignable dynamically(?)
+    // We're specifying a couple of string in this array, where each string refers to a database field we want to make mass assignable - i.e. assignable dynamically
 
 
     public function likes() {
@@ -84,7 +84,7 @@ class Post extends Model
     //     }
     //     return $session->get('posts');
     //     // We want to accesss our session here
-    //     // We cant use dependcy injection in our post class because it doesn't have access to the laravel service contada (?)
+    //     // We cant use dependcy injection in our post class because it doesn't have access to the laravel service contada
     //     // we can use a facade, or we can pass a session here as an argument and inject it in the controller, and then pass it to this method
 
     //     // We're using the second method, so we're accessing the session in the return, then using the get method to access all our posts - we'll need a key in this session that holds all our posts
