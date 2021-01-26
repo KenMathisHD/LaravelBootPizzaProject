@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ URL::to('css/styles.css') }}">
     <!-- Using a facade above to pull in the CSS from its spot no matter how that path changes -->
 
-    <title>Laravel</title>
+    <title>That are Laravel Views with Laravel Blade</title>
 
 
 </head>
